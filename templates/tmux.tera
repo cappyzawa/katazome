@@ -1,0 +1,53 @@
+# Akari {{ variant | title }} — tmux theme
+# {{ description }}
+
+# Palette
+%hidden AKARI_BG="{{ base.background }}"
+%hidden AKARI_FG="{{ base.foreground }}"
+%hidden AKARI_SURFACE="{{ layers.surface }}"
+%hidden AKARI_BORDER="{{ layers.border }}"
+%hidden AKARI_SUNKEN="{{ layers.sunken }}"
+%hidden AKARI_SELECTION="{{ state.selection_bg }}"
+%hidden AKARI_ACTIVE="{{ state.active_bg }}"
+%hidden AKARI_LANTERN="{{ colors.lantern }}"
+%hidden AKARI_EMBER="{{ colors.ember }}"
+%hidden AKARI_AMBER="{{ colors.amber }}"
+%hidden AKARI_LIFE="{{ colors.life }}"
+%hidden AKARI_NIGHT="{{ colors.night }}"
+%hidden AKARI_MUTED="{{ colors.muted }}"
+%hidden AKARI_COMMENT="{{ semantic.comment }}"
+
+# Status bar
+set-option -g status-style "bg=$AKARI_BG,fg=$AKARI_FG"
+set-option -g status-position top
+set-option -g status-justify left
+
+# Status left
+set-option -g status-left-length 100
+set-option -g status-left "#[bg=$AKARI_LANTERN,fg=$AKARI_BG,bold] 󰝺 #S #[bg=$AKARI_BG,fg=$AKARI_LANTERN] "
+
+# Status right
+set-option -g status-right-length 100
+set-option -g status-right ""
+
+# Window status
+set-option -g window-status-format "#[fg=$AKARI_COMMENT] #I:#W "
+set-option -g window-status-current-format "#[bg=$AKARI_ACTIVE,fg=$AKARI_LANTERN,bold] #I:#W #[bg=$AKARI_BG]"
+set-option -g window-status-separator ""
+
+# Pane borders
+set-option -g pane-border-style "fg=$AKARI_BORDER"
+set-option -g pane-active-border-style "fg=$AKARI_LANTERN"
+
+# Pane border status
+set-option -g pane-border-format "#[fg=$AKARI_COMMENT] #{pane_title} "
+
+# Message style
+set-option -g message-style "bg=$AKARI_SURFACE,fg=$AKARI_LANTERN"
+set-option -g message-command-style "bg=$AKARI_SURFACE,fg=$AKARI_FG"
+
+# Mode style (copy mode, etc.)
+set-option -g mode-style "bg=$AKARI_SELECTION,fg=$AKARI_FG"
+
+# Clock
+set-option -g clock-mode-colour "$AKARI_LANTERN"
