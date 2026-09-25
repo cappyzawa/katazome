@@ -108,7 +108,7 @@ fn theme_ninja_readmes_carry_no_akari_identity_or_story() {
             .generate(tool, &theme, &theme_dir("ninja"))
             .unwrap();
         let rel = format!("{tool}/README.md");
-        let readme = without_shared_repository(artifact_text(&artifacts, &rel)).to_lowercase();
+        let readme = artifact_text(&artifacts, &rel).to_lowercase();
         for word in AKARI_ONLY_WORDS {
             assert!(!readme.contains(word), "{rel} mentions {word:?}");
         }
@@ -424,23 +424,13 @@ fn ninja_shadow_ghostty_lines_are_key_value_pairs() {
     }
 }
 
-/// Ninja's `theme.repository` is this repository, so its URL and its
-/// `owner/name` slug are removed before looking for Akari's identity.
-fn without_shared_repository(text: &str) -> String {
-    let repository = ninja_theme().metadata.repository.unwrap_or_default();
-    let slug = repository.replace("https://github.com/", "");
-    text.replace(&repository, "").replace(&slug, "")
-}
-
 fn assert_no_akari_mentions(artifacts: &[Artifact], tool: &str) {
     for artifact in artifacts {
         let ArtifactContent::Text(text) = &artifact.content else {
             continue;
         };
         assert!(
-            !without_shared_repository(text)
-                .to_lowercase()
-                .contains("akari"),
+            !text.to_lowercase().contains("akari"),
             "{} ({tool}) mentions akari",
             artifact.rel_path.display()
         );

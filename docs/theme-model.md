@@ -4,12 +4,10 @@ This document defines the shared theme model: how a theme is declared, which
 color roles every theme must assign, and what tool adapters may consume.
 It is the contract between theme authors and adapter authors.
 
-Status: the model is defined and illustrated by `themes/akari` and
-`themes/ninja`. The loader reads theme directories, and every tool is
-generated from them; the legacy palette route is gone. The engine is
-named katazome, and its public API and crate metadata are in the shape
-they keep after extraction. The engine's tests use `themes/ninja` and the
-fixtures under `tests/fixtures/`, never `themes/akari`.
+Status: the model is illustrated by `themes/ninja` and the fixtures under
+`tests/fixtures/`, which the engine's tests use. Every tool is generated
+from theme directories. katazome is a standalone repository and crate;
+themes live in their own repositories.
 
 ## Pipeline
 
@@ -20,14 +18,13 @@ themes/<id>/theme.toml + <variant>.toml
 Resolved theme: metadata + one resolved variant per file
         |  adapters map roles to tool settings
         v
-dist/<tool>/...
+<out-dir>/<tool>/...
 ```
 
 ## Theme layout
 
-A theme is a directory. Its final home is a repository of its own that
-depends on the engine crate; until the engine is extracted, `themes/<id>/`
-in this repository plays that role.
+A theme is a directory in a repository of its own; katazome reads it
+through `--theme-dir`.
 
 ```text
 <theme directory>/
@@ -302,7 +299,5 @@ rather than snapshot-refreshed.
 
 ## Not decided here
 
-- Cargo workspace layout and the engine crate's public Rust API.
-- How the engine crate ships its templates to theme repositories, and whether the CLI is part of the same crate.
 - Whether variants may share role expressions through a theme-level default.
-- Installation, publishing and release workflows for a second theme.
+- Installation, publishing and release workflows of theme repositories.

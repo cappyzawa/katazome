@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: clippy, rustfmt
+
+    - name: Check formatting
+      run: cargo fmt -- --check
+
+    - name: Run clippy
+      run: cargo clippy --all-targets -- -D warnings
+
+    - name: Run tests
+      run: cargo test
+
+    - name: Run tests without default features
+      run: cargo test --no-default-features
+
+    - name: Package the crate
+      run: cargo package
+
+    - name: Generate every tool from the fixture themes
+      run: |
+        for dir in themes/ninja tests/fixtures/duo; do
+          cargo run -- generate --theme-dir "$dir" --tool all --out-dir "$RUNNER_TEMP/$(basename "$dir")"
+        done

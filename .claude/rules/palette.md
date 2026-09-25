@@ -7,7 +7,7 @@ globs:
 
 # Palette Evaluation Pipeline
 
-`themes/<id>/theme.toml` + `<variant>.toml` → raw serde structs (`ThemeFile`, `RawVariant`, `RawRoles`, ...) → `ColorExpr` parsing → `Resolver` staged resolution → `Theme` (`ResolvedVariant` per variant) → Tera templates → `dist/`
+`themes/<id>/theme.toml` + `<variant>.toml` → raw serde structs (`ThemeFile`, `RawVariant`, `RawRoles`, ...) → `ColorExpr` parsing → `Resolver` staged resolution → `Theme` (`ResolvedVariant` per variant) → Tera templates → the output directory
 
 ## ColorExpr Syntax
 
