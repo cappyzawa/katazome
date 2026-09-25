@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 #[derive(Parser)]
-#[command(name = "katazome")]
+#[command(name = "katazome", version)]
 #[command(about = "Generate theme files from a theme directory")]
 struct Cli {
     #[command(subcommand)]
