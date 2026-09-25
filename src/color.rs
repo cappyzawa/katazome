@@ -133,7 +133,7 @@ impl Rgb {
     /// - hue: 0.0 to 360.0
     /// - saturation: 0.0 to 1.0
     /// - lightness: 0.0 to 1.0
-    fn to_hsl(self) -> (f64, f64, f64) {
+    pub(crate) fn to_hsl(self) -> (f64, f64, f64) {
         let r = self.r as f64 / 255.0;
         let g = self.g as f64 / 255.0;
         let b = self.b as f64 / 255.0;

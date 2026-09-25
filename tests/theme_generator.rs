@@ -972,6 +972,45 @@ fn chrome_renders_with_only_the_declared_adapter_keys() {
     assert_eq!(doc["version"], "9.9.9");
 }
 
+/// `tints.buttons` of the Chrome manifest rendered from ninja with
+/// `roles.ui.accent` replaced by `accent`.
+fn chrome_button_tint_for_accent(accent: &str) -> Vec<f64> {
+    let mut theme = ninja_theme();
+    theme.variants[0].roles.ui.accent = accent.parse().unwrap();
+    let artifacts = generator()
+        .generate("chrome", &theme, &theme_dir("ninja"))
+        .unwrap();
+    let text = artifact_text(&artifacts, "chrome/ninja-shadow/manifest.json");
+    let doc: serde_json::Value = serde_json::from_str(text).unwrap();
+    doc["theme"]["tints"]["buttons"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|c| c.as_f64().unwrap())
+        .collect()
+}
+
+#[test]
+fn chrome_button_tint_takes_its_hue_from_the_accent() {
+    assert_eq!(chrome_button_tint_for_accent("#FF0000")[0], 0.0);
+    assert_eq!(chrome_button_tint_for_accent("#0000FF")[0], 0.667);
+}
+
+/// Chrome's tint saturation is relative: 0.5 leaves the icon unchanged and
+/// 1.0 fully saturates it.
+#[test]
+fn chrome_button_tint_saturates_the_icon_as_much_as_the_accent_is_saturated() {
+    assert_eq!(chrome_button_tint_for_accent("#FF0000")[1], 1.0);
+    assert_eq!(chrome_button_tint_for_accent("#808080")[1], 0.5);
+}
+
+/// `-1` is Chrome's "no change", keeping the icon lightness Chrome picks
+/// for contrast with the toolbar.
+#[test]
+fn chrome_button_tint_leaves_icon_lightness_to_chrome() {
+    assert_eq!(chrome_button_tint_for_accent("#FF0000")[2], -1.0);
+}
+
 // -- THEME_ASSETS: files that live in the theme directory, not templates/ --
 
 /// A temp templates dir containing only `vscode/package.json.tera` and a
