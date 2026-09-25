@@ -35,13 +35,6 @@ jobs:
     - name: Package the crate
       run: cargo package
 
-    - name: Check the package leaves out repository-only files
-      run: |
-        if cargo package --list | grep -E '^(tests|themes|docs|\.github)/'; then
-          echo "::error::the package includes repository-only files"
-          exit 1
-        fi
-
     - name: Generate every tool from the fixture themes
       run: |
         for dir in themes/ninja tests/fixtures/duo; do

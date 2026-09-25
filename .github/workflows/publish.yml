@@ -1,32 +1,36 @@
 name: Publish
 
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        ref: main
 
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
 
-    - name: Check the tag matches the crate version
-      env:
-        TAG: ${{ github.ref_name }}
+    - name: Read the crate version
+      id: crate
       run: |
         version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "katazome") | .version')
-        if [ "$TAG" != "v$version" ]; then
-          echo "::error::tag $TAG does not match Cargo.toml version $version"
-          exit 1
-        fi
+        echo "tag=v$version" >> "$GITHUB_OUTPUT"
 
     - name: Publish to crates.io
       run: cargo publish
       env:
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+    - name: Tag the published version
+      env:
+        TAG: ${{ steps.crate.outputs.tag }}
+      run: |
+        git tag "$TAG"
+        git push origin "$TAG"
