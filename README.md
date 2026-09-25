@@ -42,6 +42,8 @@ tool. Without `--tool`, katazome generates the tools listed in `theme.tools`, or
 every tool when the theme does not list any. The templates are built into the
 binary; `--templates-dir <dir>` renders from a templates directory instead.
 
+`katazome --version` prints the installed version.
+
 ## Tools
 
 alacritty, bat, chrome, codex, delta, fzf, gh-dash, ghostty, helix, lazygit, nix,
@@ -56,6 +58,11 @@ Some tools need metadata from `[adapters.<tool>]` in `theme.toml`:
 | vscode | `publisher`, `version` | `icon`, `readme`, `keywords` |
 
 A missing required key fails generation for that tool only.
+
+Any tool also accepts an optional `mirror = "<owner>/<repo>"` in
+`[adapters.<tool>]`. The READMEs of alacritty, chrome, fzf, ghostty, helix,
+nvim, starship, terminal, tmux, vscode, zellij and zsh print a read-only-mirror
+notice and install from it only when it is set.
 
 ## Library
 

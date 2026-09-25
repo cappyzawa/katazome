@@ -1,21 +1,22 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set owner = slug | split(pat="/") | first -%}
 {%- set first = variants.0 -%}
 # {{ theme.name }} Neovim Theme
 
+{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
 > [!IMPORTANT]
 > This repository is a read-only mirror.
 > Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
+{% endif -%}
 Neovim colorscheme for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
+{% if adapter.mirror -%}
 ### lazy.nvim
 
 ```lua
 {
-    "{{ owner }}/{{ theme.id }}-nvim",
+    "{{ adapter.mirror }}",
     config = function()
         require("{{ theme.id }}").setup({ variant = "{{ first.variant.id }}" })
         vim.cmd.colorscheme("{{ theme.id }}")
@@ -27,7 +28,7 @@ To pin a specific version:
 
 ```lua
 {
-    "{{ owner }}/{{ theme.id }}-nvim",
+    "{{ adapter.mirror }}",
     tag = "v0.9.0",
     config = function()
         require("{{ theme.id }}").setup({ variant = "{{ first.variant.id }}" })
@@ -39,7 +40,7 @@ To pin a specific version:
 ### vim-plug
 
 ```vim
-Plug '{{ owner }}/{{ theme.id }}-nvim'
+Plug '{{ adapter.mirror }}'
 ```
 
 Then in your config:
@@ -52,7 +53,7 @@ colorscheme {{ theme.id }}
 ### dein.vim
 
 ```vim
-call dein#add('{{ owner }}/{{ theme.id }}-nvim')
+call dein#add('{{ adapter.mirror }}')
 ```
 
 Then in your config:
@@ -61,7 +62,21 @@ Then in your config:
 lua require("{{ theme.id }}").setup({ variant = "{{ first.variant.id }}" })
 colorscheme {{ theme.id }}
 ```
+{% else -%}
+### lazy.nvim
 
+Point lazy.nvim at this directory:
+
+```lua
+{
+    dir = "/path/to/this/directory",
+    config = function()
+        require("{{ theme.id }}").setup({ variant = "{{ first.variant.id }}" })
+        vim.cmd.colorscheme("{{ theme.id }}")
+    end,
+}
+```
+{% endif %}
 ## Options
 
 ```lua

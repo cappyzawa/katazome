@@ -1,24 +1,31 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set owner = slug | split(pat="/") | first -%}
 {%- set first = variants.0 -%}
-{%- set mirror = theme.id ~ "-starship" -%}
 # {{ theme.name }} Starship Theme
 
+{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
+{%- set repo = adapter.mirror | split(pat="/") | last -%}
 > [!IMPORTANT]
 > This repository is a read-only mirror.
 > Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
+{% endif -%}
 Starship prompt themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
+{% if adapter.mirror -%}
 Clone the repository and add the palette to your Starship config:
 
 ```bash
-git clone https://github.com/{{ owner }}/{{ mirror }}.git
-cat {{ mirror }}/{{ theme.id }}-{{ first.variant.id }}.toml >> ~/.config/starship.toml
+git clone https://github.com/{{ adapter.mirror }}.git
+cat {{ repo }}/{{ theme.id }}-{{ first.variant.id }}.toml >> ~/.config/starship.toml
 ```
+{% else -%}
+Add the palette to your Starship config:
 
+```bash
+cat {{ theme.id }}-{{ first.variant.id }}.toml >> ~/.config/starship.toml
+```
+{% endif %}
 Then set the palette in your config:
 
 ```toml
@@ -27,10 +34,15 @@ palette = '{{ theme.id }}-{{ first.variant.id }}'
 {% for v in variants | slice(start=1) %}
 Or for {{ v.variant.id }}:
 
+{% if adapter.mirror -%}
 ```bash
-cat {{ mirror }}/{{ theme.id }}-{{ v.variant.id }}.toml >> ~/.config/starship.toml
+cat {{ repo }}/{{ theme.id }}-{{ v.variant.id }}.toml >> ~/.config/starship.toml
 ```
-
+{% else -%}
+```bash
+cat {{ theme.id }}-{{ v.variant.id }}.toml >> ~/.config/starship.toml
+```
+{% endif %}
 ```toml
 palette = '{{ theme.id }}-{{ v.variant.id }}'
 ```

@@ -115,6 +115,96 @@ fn theme_ninja_readmes_carry_no_akari_identity_or_story() {
     }
 }
 
+// -- adapters.<tool>.mirror: optional read-only mirror repository ----------
+
+fn readme(theme: &Theme, dir: &Path, tool: &str) -> String {
+    let artifacts = generator().generate(tool, theme, dir).unwrap();
+    artifact_text(&artifacts, &format!("{tool}/README.md")).to_string()
+}
+
+fn declare_mirror(theme: &mut Theme, tool: &str, mirror: toml::Value) {
+    theme
+        .adapters
+        .entry(tool.to_string())
+        .or_default()
+        .insert("mirror".to_string(), mirror);
+}
+
+#[test]
+fn readmes_without_a_declared_mirror_carry_no_mirror_notice_or_clone_steps() {
+    for (theme, dir) in [
+        (ninja_theme(), theme_dir("ninja")),
+        (duo(), fixture_dir("duo")),
+    ] {
+        let id = &theme.metadata.id;
+        for tool in Generator::available_tools() {
+            let readme = readme(&theme, &dir, tool);
+            let derived_mirror = format!("{id}-{tool}");
+            for forbidden in [
+                "read-only mirror",
+                "git clone https://github.com/",
+                derived_mirror.as_str(),
+            ] {
+                assert!(
+                    !readme.contains(forbidden),
+                    "{id} {tool}/README.md mentions {forbidden:?}"
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn readmes_with_a_declared_mirror_take_the_notice_and_clone_steps_from_it() {
+    let mut theme = ninja_theme();
+    for tool in Generator::available_tools() {
+        declare_mirror(&mut theme, tool, "mirror-owner/mirror-repo".into());
+    }
+
+    let mut notices = 0;
+    for tool in Generator::available_tools() {
+        let readme = readme(&theme, &theme_dir("ninja"), tool);
+        assert!(
+            !readme.contains(&format!("/ninja-{tool}")),
+            "{tool}/README.md derives a mirror from theme.repository"
+        );
+        for (at, _) in readme.match_indices("git clone https://github.com/") {
+            let target = &readme[at + "git clone https://github.com/".len()..];
+            assert!(
+                target.starts_with("mirror-owner/mirror-repo"),
+                "{tool}/README.md clones something other than the declared mirror"
+            );
+        }
+        if readme.contains("read-only mirror") {
+            notices += 1;
+        }
+    }
+    assert!(notices > 0, "no README renders the declared mirror notice");
+}
+
+#[test]
+fn a_mirror_that_is_not_owner_slash_repo_fails_naming_the_tool_and_key() {
+    for bad in [
+        toml::Value::from("no-slash"),
+        toml::Value::from("a/b/c"),
+        toml::Value::from("/repo"),
+        toml::Value::from("owner/"),
+        toml::Value::from("owner/.."),
+        toml::Value::from("https://github.com/owner/repo"),
+        toml::Value::from("owner/re po"),
+        toml::Value::from(1),
+    ] {
+        let mut theme = ninja_theme();
+        declare_mirror(&mut theme, "helix", bad.clone());
+
+        let Err(err) = generator().generate("helix", &theme, &theme_dir("ninja")) else {
+            panic!("mirror = {bad} was accepted");
+        };
+        let message = err.to_string();
+        assert!(message.contains("adapters.helix.mirror"), "{message}");
+    }
+}
+
 const HELIX_BUILTIN_COLORS: &[&str] = &[
     "black",
     "red",

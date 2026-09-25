@@ -175,6 +175,48 @@ fn check_adapter_keys(
     Ok(())
 }
 
+/// `adapters.<tool>.<MIRROR_KEY>`, optional for every tool, names the
+/// read-only GitHub mirror a README installs from.
+const MIRROR_KEY: &str = "mirror";
+
+/// Whether `value` is a string `<owner>/<repo>` made of characters GitHub
+/// allows in owner and repository names.
+fn is_owner_slash_repo(value: &toml::Value) -> bool {
+    let Some(s) = value.as_str() else {
+        return false;
+    };
+    let mut segments = s.split('/');
+    let (Some(owner), Some(repo), None) = (segments.next(), segments.next(), segments.next())
+    else {
+        return false;
+    };
+    [owner, repo].into_iter().all(|segment| {
+        !segment.is_empty()
+            && segment != "."
+            && segment != ".."
+            && segment
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.'))
+    })
+}
+
+fn check_adapter_mirror(tool: &str, table: Option<&toml::Table>) -> Result<(), Error> {
+    let Some(value) = table.and_then(|t| t.get(MIRROR_KEY)) else {
+        return Ok(());
+    };
+    if is_owner_slash_repo(value) {
+        return Ok(());
+    }
+    Err(Error::AdapterMirror {
+        tool: tool.to_string(),
+        key: MIRROR_KEY.to_string(),
+        value: value
+            .as_str()
+            .map(str::to_string)
+            .unwrap_or_else(|| value.to_string()),
+    })
+}
+
 /// An adapter's `[adapters.<tool>]` table and its `ADAPTER_TEXTS` contents.
 struct AdapterContext<'a> {
     table: &'a toml::Table,
@@ -288,6 +330,7 @@ impl Generator {
         if let Some((_, required)) = ADAPTER_KEYS.iter().find(|(t, _)| *t == tool) {
             check_adapter_keys(tool, required, theme.adapters.get(tool))?;
         }
+        check_adapter_mirror(tool, theme.adapters.get(tool))?;
 
         let mut artifacts = Vec::new();
         let prefix = format!("{tool}/");

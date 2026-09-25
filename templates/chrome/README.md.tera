@@ -1,22 +1,22 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set owner = slug | split(pat="/") | first -%}
-{%- set mirror = theme.id ~ "-chrome" -%}
 # {{ theme.name }} Chrome Theme
 
+{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
+{%- set repo = adapter.mirror | split(pat="/") | last -%}
 > [!IMPORTANT]
 > This repository is a read-only mirror.
 > Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
+{% endif -%}
 Chrome browser themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
-
+{% if adapter.mirror %}
 Clone the repository:
 
 ```bash
-git clone https://github.com/{{ owner }}/{{ mirror }}.git
+git clone https://github.com/{{ adapter.mirror }}.git
 ```
-{% for v in variants %}
+{% endif %}{% for v in variants %}
 ### {{ v.variant.name }} Theme
 
 {{ v.variant.description }}
@@ -24,7 +24,7 @@ git clone https://github.com/{{ owner }}/{{ mirror }}.git
 1. Open `chrome://extensions/` in Chrome
 2. Enable "Developer mode" in the top right
 3. Click "Load unpacked"
-4. Select the `{{ mirror }}/{{ theme.id }}-{{ v.variant.id }}/` directory
+4. Select the `{% if adapter.mirror %}{{ repo }}/{% endif %}{{ theme.id }}-{{ v.variant.id }}/` directory
 
 **Key colors:** {{ v.variant.appearance | capitalize }} backgrounds ({{ v.base.background }}) with active tabs ({{ v.roles.ui.accent }})
 {% endfor %}
