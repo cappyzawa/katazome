@@ -82,6 +82,22 @@ fn generate(theme_dir: &Path, extra_args: &[&str], out_dir: &Path) {
 }
 
 #[test]
+fn version_flags_print_the_crate_version() {
+    for flag in ["--version", "-V"] {
+        let output = Command::new(env!("CARGO_BIN_EXE_katazome"))
+            .arg(flag)
+            .output()
+            .unwrap();
+        assert!(output.status.success(), "{flag} failed: {output:?}");
+        assert_eq!(
+            String::from_utf8(output.stdout).unwrap(),
+            format!("katazome {}\n", env!("CARGO_PKG_VERSION")),
+            "{flag}"
+        );
+    }
+}
+
+#[test]
 fn templates_dir_override_generates_the_same_files_as_the_built_in_templates() {
     for theme_dir in [
         root_dir().join("themes/ninja"),

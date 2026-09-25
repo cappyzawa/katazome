@@ -42,6 +42,8 @@ tool. Without `--tool`, katazome generates the tools listed in `theme.tools`, or
 every tool when the theme does not list any. The templates are built into the
 binary; `--templates-dir <dir>` renders from a templates directory instead.
 
+`katazome --version` prints the installed version.
+
 ## Tools
 
 alacritty, bat, chrome, codex, delta, fzf, gh-dash, ghostty, helix, lazygit, nix,

@@ -1,21 +1,14 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set owner = slug | split(pat="/") | first -%}
 {%- set first = variants.0 -%}
 # {{ theme.name }} Alacritty Theme
-
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
 Alacritty terminal emulator themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
-Clone the repository and copy the theme files:
+Copy the theme files:
 
 ```bash
-git clone https://github.com/{{ owner }}/{{ theme.id }}-alacritty.git
-cp {{ theme.id }}-alacritty/*.toml ~/.config/alacritty/themes/
+cp *.toml ~/.config/alacritty/themes/
 ```
 
 Then import the theme in your `alacritty.toml`:

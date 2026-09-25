@@ -1,9 +1,4 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
 # {{ theme.name }} Zellij Theme
-
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
 Zellij themes for {{ theme.name }}. {{ theme.description }}
 

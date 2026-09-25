@@ -1,22 +1,14 @@
-{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set owner = slug | split(pat="/") | first -%}
 {%- set first = variants.0 -%}
-{%- set mirror = theme.id ~ "-starship" -%}
 # {{ theme.name }} Starship Theme
-
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
 
 Starship prompt themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
-Clone the repository and add the palette to your Starship config:
+Add the palette to your Starship config:
 
 ```bash
-git clone https://github.com/{{ owner }}/{{ mirror }}.git
-cat {{ mirror }}/{{ theme.id }}-{{ first.variant.id }}.toml >> ~/.config/starship.toml
+cat {{ theme.id }}-{{ first.variant.id }}.toml >> ~/.config/starship.toml
 ```
 
 Then set the palette in your config:
@@ -28,7 +20,7 @@ palette = '{{ theme.id }}-{{ first.variant.id }}'
 Or for {{ v.variant.id }}:
 
 ```bash
-cat {{ mirror }}/{{ theme.id }}-{{ v.variant.id }}.toml >> ~/.config/starship.toml
+cat {{ theme.id }}-{{ v.variant.id }}.toml >> ~/.config/starship.toml
 ```
 
 ```toml

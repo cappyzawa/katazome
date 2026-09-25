@@ -115,6 +115,30 @@ fn theme_ninja_readmes_carry_no_akari_identity_or_story() {
     }
 }
 
+// -- READMEs install from the generated files, not a per-tool repository --
+
+#[test]
+fn readmes_install_from_the_generated_files_without_cloning_a_per_tool_repository() {
+    let generator = generator();
+    for (theme, dir) in [
+        (ninja_theme(), theme_dir("ninja")),
+        (duo(), fixture_dir("duo")),
+    ] {
+        let id = &theme.metadata.id;
+        for tool in Generator::available_tools() {
+            let artifacts = generator.generate(tool, &theme, &dir).unwrap();
+            let readme = artifact_text(&artifacts, &format!("{tool}/README.md"));
+            let per_tool_repository = format!("{id}-{tool}");
+            for forbidden in ["git clone", per_tool_repository.as_str()] {
+                assert!(
+                    !readme.contains(forbidden),
+                    "{id} {tool}/README.md mentions {forbidden:?}"
+                );
+            }
+        }
+    }
+}
+
 const HELIX_BUILTIN_COLORS: &[&str] = &[
     "black",
     "red",
