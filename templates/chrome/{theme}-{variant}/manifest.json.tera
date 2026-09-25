@@ -10,6 +10,7 @@
       "frame_incognito": {{ base.background | hex_to_rgb }},
       "frame_incognito_inactive": {{ base.background | hex_to_rgb }},
       "toolbar": {{ roles.ui.active_bg | hex_to_rgb }},
+      "toolbar_button_icon": {{ roles.ui.accent | hex_to_rgb }},
       "tab_text": {{ base.foreground | hex_to_rgb }},
       "tab_background_text": {{ roles.ui.muted | hex_to_rgb }},
       "tab_background_text_inactive": {{ roles.ui.muted | hex_to_rgb }},
@@ -26,13 +27,6 @@
     },
     "properties": {
       "ntp_background_alignment": "center"
-    },
-    "tints": {
-      {#- Chrome's tint saturation and lightness are relative (0.5 = no change,
-          -1 = no change), so the accent's saturation maps onto [0.5, 1]. -#}
-      {%- set accent_hsl = roles.ui.accent | hex_to_hsl %}
-      {%- set tint_saturation = 0.5 + accent_hsl.1 / 2 %}
-      "buttons": [{{ accent_hsl.0 | round(precision=3) }}, {{ tint_saturation | round(precision=3) }}, -1]
     }
   }
 }

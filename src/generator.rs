@@ -201,17 +201,6 @@ fn hex_to_rgb_space_filter(value: &Value, _args: &HashMap<String, Value>) -> ter
     Ok(Value::String(rgb.to_space_separated()))
 }
 
-fn hex_to_hsl_filter(value: &Value, _args: &HashMap<String, Value>) -> tera::Result<Value> {
-    let hex = value
-        .as_str()
-        .ok_or_else(|| tera::Error::msg("hex_to_hsl requires a string"))?;
-    let rgb: Rgb = hex
-        .parse()
-        .map_err(|e: crate::Error| tera::Error::msg(e.to_string()))?;
-    let (h, s, l) = rgb.to_hsl();
-    Ok(Value::from(vec![h / 360.0, s, l]))
-}
-
 pub struct Generator {
     tera: Tera,
     templates: Vec<TemplateFile>,
@@ -280,7 +269,6 @@ impl Generator {
             })?;
         tera.register_filter("hex_to_rgb", hex_to_rgb_filter);
         tera.register_filter("hex_to_rgb_space", hex_to_rgb_space_filter);
-        tera.register_filter("hex_to_hsl", hex_to_hsl_filter);
         Ok(Self { tera, templates })
     }
 
@@ -541,50 +529,7 @@ fn combined_context(theme: &Theme, adapter: &AdapterContext<'_>) -> Context {
 
 #[cfg(test)]
 mod tests {
-    use super::{check_adapter_keys, hex_to_hsl_filter};
-    use std::collections::HashMap;
-    use tera::Value;
-
-    fn hsl(hex: &str) -> Vec<f64> {
-        let value = hex_to_hsl_filter(&Value::String(hex.to_string()), &HashMap::new()).unwrap();
-        value
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|c| c.as_f64().unwrap())
-            .collect()
-    }
-
-    fn assert_hsl(hex: &str, expected: [f64; 3]) {
-        let actual = hsl(hex);
-        assert!(
-            actual
-                .iter()
-                .zip(expected)
-                .all(|(a, e)| (a - e).abs() < 0.001),
-            "{hex}: expected {expected:?}, got {actual:?}"
-        );
-    }
-
-    #[test]
-    fn hex_to_hsl_scales_hue_to_the_unit_range() {
-        assert_hsl("#FF0000", [0.0, 1.0, 0.5]);
-        assert_hsl("#00FF00", [1.0 / 3.0, 1.0, 0.5]);
-        assert_hsl("#0000FF", [2.0 / 3.0, 1.0, 0.5]);
-        assert_hsl("#FF00FF", [5.0 / 6.0, 1.0, 0.5]);
-    }
-
-    #[test]
-    fn hex_to_hsl_gives_achromatic_colors_zero_hue_and_saturation() {
-        assert_hsl("#000000", [0.0, 0.0, 0.0]);
-        assert_hsl("#FFFFFF", [0.0, 0.0, 1.0]);
-        assert_hsl("#808080", [0.0, 0.0, 128.0 / 255.0]);
-    }
-
-    #[test]
-    fn hex_to_hsl_rejects_a_non_string() {
-        assert!(hex_to_hsl_filter(&Value::Bool(true), &HashMap::new()).is_err());
-    }
+    use super::check_adapter_keys;
 
     #[test]
     fn check_adapter_keys_reports_missing_key_when_adapter_table_absent() {
