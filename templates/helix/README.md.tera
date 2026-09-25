@@ -1,31 +1,16 @@
 {%- set first = variants.0 -%}
 # {{ theme.name }} Helix Theme
 
-{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set repo = adapter.mirror | split(pat="/") | last -%}
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
-
-{% endif -%}
 Helix editor themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
-{% if adapter.mirror -%}
-Clone the repository and symlink or copy the theme files:
-
-```bash
-git clone https://github.com/{{ adapter.mirror }}.git
-cp {{ repo }}/*.toml ~/.config/helix/themes/
-```
-{% else -%}
 Symlink or copy the theme files:
 
 ```bash
 cp *.toml ~/.config/helix/themes/
 ```
-{% endif %}
+
 Then add to your Helix config (`~/.config/helix/config.toml`):
 
 ```toml

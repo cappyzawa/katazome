@@ -112,13 +112,6 @@ pub enum Error {
         path: PathBuf,
     },
     #[cfg(feature = "generator")]
-    #[error("adapters.{tool}.{key} = {value} must be <owner>/<repo>")]
-    AdapterMirror {
-        tool: String,
-        key: String,
-        value: String,
-    },
-    #[cfg(feature = "generator")]
     #[error("template {0} is not valid UTF-8")]
     TemplateNotUtf8(String),
 }

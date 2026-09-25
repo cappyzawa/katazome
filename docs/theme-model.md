@@ -48,7 +48,6 @@ added later without invalidating files written this way.
 | `theme.variants` | yes | Ordered list of variant ids. The first entry is the default variant for plugins that pick one. |
 | `theme.tools` | no | Tools generated when no tool is named on the command line, in order. Absent means every tool. An unknown name fails generation. |
 | `adapters.<tool>.*` | per adapter | Metadata one adapter needs to build a loadable artifact, such as a VS Code publisher. Each adapter documents its own required keys. Missing keys fail generation only when that adapter is selected. |
-| `adapters.<tool>.mirror` | no | `<owner>/<repo>` of a read-only GitHub mirror that publishes this tool's generated files. When set, the tool's README says the repository is a read-only mirror and installs from it; when absent, the README omits that notice and any mirror-based install step. |
 
 ### Variant file
 
@@ -227,7 +226,6 @@ Identity in artifacts derives from metadata, never from literals:
 | Light or dark switches (`uiTheme`, `background`, `dark = true`) | `variant.appearance`, never `variant.id` |
 | Default variant for plugins | first entry of `theme.variants` |
 | Publisher, version, icon, repository | `adapters.<tool>.*` and `theme.*` |
-| Repository users install a tool's generated files from | `adapters.<tool>.mirror`, never derived from `theme.repository` |
 
 ## How the vocabulary was derived
 

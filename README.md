@@ -59,11 +59,6 @@ Some tools need metadata from `[adapters.<tool>]` in `theme.toml`:
 
 A missing required key fails generation for that tool only.
 
-Any tool also accepts an optional `mirror = "<owner>/<repo>"` in
-`[adapters.<tool>]`. The READMEs of alacritty, chrome, fzf, ghostty, helix,
-nvim, starship, terminal, tmux, vscode, zellij and zsh print a read-only-mirror
-notice and install from it only when it is set.
-
 ## Library
 
 `Theme::load` resolves a theme directory into role colors, so an adapter for a

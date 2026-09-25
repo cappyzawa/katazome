@@ -1,11 +1,5 @@
 # {{ theme.name }} Zellij Theme
 
-{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
-
-{% endif -%}
 Zellij themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation

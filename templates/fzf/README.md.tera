@@ -1,100 +1,12 @@
 {%- set first = variants.0 -%}
 # {{ theme.name }} fzf Theme
 
-{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-{%- set repo = adapter.mirror | split(pat="/") | last -%}
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
-
-{% endif -%}
 fzf themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
 ### Manual
 
-{% if adapter.mirror -%}
-Clone the repository and source the theme file in your `.bashrc` or `.zshrc`:
-
-```bash
-git clone https://github.com/{{ adapter.mirror }}.git
-source /path/to/{{ repo }}/{{ theme.id }}-{{ first.variant.id }}.sh
-```
-{% for v in variants | slice(start=1) %}
-Or for {{ v.variant.id }}:
-
-```bash
-source /path/to/{{ repo }}/{{ theme.id }}-{{ v.variant.id }}.sh
-```
-{% endfor %}
-### zinit
-
-```zsh
-zinit light-mode for \
-  pick"{{ theme.id }}-{{ first.variant.id }}.sh" \
-  {{ adapter.mirror }}
-```
-{% for v in variants | slice(start=1) %}
-Or for {{ v.variant.id }}:
-
-```zsh
-zinit light-mode for \
-  pick"{{ theme.id }}-{{ v.variant.id }}.sh" \
-  {{ adapter.mirror }}
-```
-{% endfor %}
-### sheldon
-
-Add to your `~/.config/sheldon/plugins.toml`:
-
-```toml
-[plugins.{{ repo }}]
-github = "{{ adapter.mirror }}"
-use = ["{{ theme.id }}-{{ first.variant.id }}.sh"]
-```
-{% for v in variants | slice(start=1) %}
-Or for {{ v.variant.id }}:
-
-```toml
-[plugins.{{ repo }}]
-github = "{{ adapter.mirror }}"
-use = ["{{ theme.id }}-{{ v.variant.id }}.sh"]
-```
-{% endfor %}
-### oh-my-zsh
-
-Clone as a custom plugin:
-
-```bash
-git clone https://github.com/{{ adapter.mirror }} ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/{{ repo }}
-```
-
-Then add to your `.zshrc`:
-
-```zsh
-plugins=(... {{ repo }})
-```
-{% for v in variants | slice(start=1) %}
-To use {{ v.variant.id }} variant, set before loading oh-my-zsh:
-
-```zsh
-export {{ theme.id | upper }}_VARIANT={{ v.variant.id }}
-```
-{% endfor %}
-### antigen
-
-```zsh
-antigen bundle {{ adapter.mirror }}
-```
-{% for v in variants | slice(start=1) %}
-To use {{ v.variant.id }} variant, set before loading:
-
-```zsh
-export {{ theme.id | upper }}_VARIANT={{ v.variant.id }}
-```
-{% endfor %}
-{% else -%}
 Source the theme file in your `.bashrc` or `.zshrc`:
 
 ```bash
@@ -107,7 +19,6 @@ Or for {{ v.variant.id }}:
 source /path/to/{{ theme.id }}-{{ v.variant.id }}.sh
 ```
 {% endfor %}
-{% endif -%}
 ## Variants
 
 {% for v in variants -%}

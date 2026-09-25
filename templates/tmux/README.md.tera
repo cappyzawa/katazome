@@ -1,39 +1,22 @@
 {%- set first = variants.0 -%}
 # {{ theme.name }} tmux Theme
 
-{% if adapter.mirror %}{%- set slug = theme.repository | replace(from="https://github.com/", to="") -%}
-> [!IMPORTANT]
-> This repository is a read-only mirror.
-> Issues, pull requests, and stars should go to [{{ slug }}]({{ theme.repository }}).
-
-{% endif -%}
 tmux themes for {{ theme.name }}. {{ theme.description }}
 
 ## Installation
 
-{% if adapter.mirror -%}
-### Using TPM (recommended)
+### Plugin entry (recommended)
 
-Add to your `.tmux.conf`:
+Set the variant and run the plugin entry from your `.tmux.conf`:
 
 ```tmux
-set -g @plugin '{{ adapter.mirror }}'
 set -g @{{ theme.id }}_variant '{{ first.variant.id }}'{% if variants | length > 1 %}  #{% for v in variants | slice(start=1) %} or '{{ v.variant.id }}'{% endfor %}{% endif %}
-```
-
-Then press `prefix + I` to install.
-
-To pin a specific version:
-
-```tmux
-set -g @plugin '{{ adapter.mirror }}#v0.9.0'
+run-shell /path/to/{{ theme.id }}.tmux
 ```
 
 ### Manual
-{% else -%}
-### Manual
-{% endif %}
-Download the theme file and source it in your `.tmux.conf`:
+
+Source a variant's theme file in your `.tmux.conf` instead; the options below then do not apply:
 
 ```tmux
 source-file /path/to/{{ theme.id }}-{{ first.variant.id }}.conf
