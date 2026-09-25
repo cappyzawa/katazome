@@ -2,7 +2,7 @@
 id = "ninja"
 name = "Ninja"
 description = "A dark ink palette with a blue vortex and a pink blade, tuned for reading code."
-repository = "https://github.com/cappyzawa/akari-theme"
+repository = "https://github.com/cappyzawa/katazome"
 license = "MIT"
 variants = ["shadow"]
 tools = ["helix", "nvim", "terminal"]
