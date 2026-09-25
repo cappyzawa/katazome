@@ -7,12 +7,12 @@ globs:
 
 # Palette Evaluation Pipeline
 
-`themes/<id>/theme.toml` + `<variant>.toml` → raw serde structs (`ThemeFile`, `RawVariant`, `RawRoles`, ...) → `ColorExpr` parsing → `Resolver` staged resolution → `Theme` (`ResolvedVariant` per variant) → Tera templates → `dist/`
+`themes/<id>/theme.toml` + `<variant>.toml` → raw serde structs (`ThemeFile`, `RawVariant`, `RawRoles`, ...) → `ColorExpr` parsing → `Resolver` staged resolution → `Theme` (`ResolvedVariant` per variant) → Tera templates → the output directory
 
 ## ColorExpr Syntax
 
-- Literal hex: `"#E26A3B"`
-- Reference: `"colors.lantern.mid"`, `"base.background"`, `"ansi.bright.red"`
+- Literal hex: `"#3DAEE9"`
+- Reference: `"colors.vortex"`, `"base.background"`, `"ansi.bright.red"`
 - Functions (nestable):
   - `lighten(expr, factor)` — increase lightness proportionally
   - `darken(expr, factor)` — decrease lightness proportionally

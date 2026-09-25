@@ -1,6 +1,6 @@
-# Contributing to akari-theme
+# Contributing to katazome
 
-Thank you for your interest in contributing to akari-theme!
+Thank you for your interest in contributing to katazome!
 
 ## Requirements
 
@@ -10,8 +10,8 @@ Thank you for your interest in contributing to akari-theme!
 
 ```bash
 # Clone
-git clone https://github.com/cappyzawa/akari-theme.git
-cd akari-theme
+git clone https://github.com/cappyzawa/katazome.git
+cd katazome
 
 # Build
 cargo build
@@ -20,11 +20,9 @@ cargo build
 cargo test
 cargo test --no-default-features
 
-# Generate the Akari theme
-cargo run -- generate --theme-dir themes/akari --tool all --out-dir dist
-
-# Check for differences
-git diff dist/
+# Generate the fixture themes
+cargo run -- generate --theme-dir themes/ninja --tool all --out-dir "$(mktemp -d)"
+cargo run -- generate --theme-dir tests/fixtures/duo --tool all --out-dir "$(mktemp -d)"
 ```
 
 An installed `katazome` bundles its own templates; pass `--templates-dir templates` to try changes from a checkout instead.
@@ -32,19 +30,22 @@ An installed `katazome` bundles its own templates; pass `--templates-dir templat
 ## Project Structure
 
 ```
-akari-theme/
-├── themes/            # Source of Truth (theme directories)
-│   └── akari/
-│       ├── theme.toml     # identity, variant order, adapter metadata
-│       ├── night.toml     # one self-contained file per variant
-│       └── dawn.toml
+katazome/
+├── src/               # katazome, the theme engine and CLI
+├── build.rs           # embeds templates/ into the crate
 ├── templates/         # Templates and static files
 │   └── {tool}/
 │       ├── *.tera     # Tera templates
 │       └── *          # Static files (copied as-is)
-├── dist/              # Generated output (committed)
-├── src/               # katazome, the theme engine and CLI
-└── tests/             # Integration tests
+├── themes/
+│   └── ninja/         # Fixture theme used by tests
+│       ├── theme.toml     # identity, variant order, adapter metadata
+│       └── shadow.toml    # one self-contained file per variant
+├── tests/             # Integration tests
+│   └── fixtures/
+│       └── duo/       # Another fixture theme, with a dark and a light variant
+└── docs/
+    └── theme-model.md # The theme model contract
 ```
 
 ## Adding a New Tool
@@ -57,14 +58,16 @@ akari-theme/
    `ADAPTER_KEYS` in `src/generator.rs`, any theme-directory files it ships
    (an icon, a license) to `THEME_ASSETS`, and any adapter-named text files it
    reads into the template context to `ADAPTER_TEXTS`.
-4. Add `[adapters.{tool}]` to `themes/akari/theme.toml` when the tool requires it.
+4. Add `[adapters.{tool}]` to `themes/ninja/theme.toml` and
+   `tests/fixtures/duo/theme.toml` when the tool requires it.
 5. Add `README.md.tera` with installation instructions.
 6. Cover the new tool in `tests/theme_generator.rs`, using `themes/ninja` or
    `tests/fixtures/duo`.
-7. Verify generation:
+7. Verify generation by generating the tool from `themes/ninja` and
+   `tests/fixtures/duo` into a temporary directory and inspecting the output:
    ```bash
-   cargo run -- generate --theme-dir themes/akari --tool {tool} --out-dir dist
-   git diff dist/{tool}/
+   cargo run -- generate --theme-dir themes/ninja --tool {tool} --out-dir "$(mktemp -d)"
+   cargo run -- generate --theme-dir tests/fixtures/duo --tool {tool} --out-dir "$(mktemp -d)"
    ```
 
 ## Template Variables
@@ -72,34 +75,14 @@ akari-theme/
 See `.claude/rules/templates.md` for the full context each template receives
 (`theme`, `variant`, `base`, `ansi`, `roles`, `adapter`, `adapter_text`, `variants`).
 
-## Color Philosophy
-
-When creating new themes, follow these principles:
-
-- **Light is singular** — Use warm orange (lantern) as the primary accent
-- **Blue is air, not light** — Blue represents the night sky
-- **Green is life** — Green represents plants and vitality
-- **Black is gray** — Use warm grays, no pure black
-
 ## Pull Request Guidelines
 
 CI automatically runs:
-- `cargo clippy --all-targets -- -D warnings` / `cargo fmt --check` / `cargo test` / `cargo test --no-default-features`
-- `cargo run -- generate --theme-dir themes/akari --tool all --out-dir dist` with diff check
+- `cargo fmt -- --check` / `cargo clippy --all-targets -- -D warnings` / `cargo test` / `cargo test --no-default-features`
+- `cargo package`
+- `katazome generate --tool all` for `themes/ninja` and `tests/fixtures/duo`
 
 Just ensure your commit message is in English with a title under 50 characters.
-
-## Modifying Colors
-
-To modify colors, edit `themes/akari/night.toml` or `themes/akari/dawn.toml` and
-regenerate all tools:
-
-```bash
-cargo run -- generate --theme-dir themes/akari --tool all --out-dir dist
-cargo test
-cargo test --no-default-features
-git diff dist/
-```
 
 ## Questions?
 

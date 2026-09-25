@@ -12,8 +12,8 @@ cargo test --no-default-features
 ## Verification (after theme, color or template changes)
 
 ```sh
-cargo run -- generate --theme-dir themes/akari --tool all --out-dir dist
-git diff --exit-code
+cargo run -- generate --theme-dir themes/ninja --tool all --out-dir "$(mktemp -d)"
+cargo run -- generate --theme-dir tests/fixtures/duo --tool all --out-dir "$(mktemp -d)"
 ```
 
 ## Feature Flags
