@@ -77,10 +77,7 @@ See `.claude/rules/templates.md` for the full context each template receives
 
 ## Pull Request Guidelines
 
-CI automatically runs:
-- `cargo fmt -- --check` / `cargo clippy --all-targets -- -D warnings` / `cargo test` / `cargo test --no-default-features`
-- `cargo package`
-- `katazome generate --tool all` for `themes/ninja` and `tests/fixtures/duo`
+CI runs the checks in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on every pull request.
 
 Just ensure your commit message is in English with a title under 50 characters.
 
