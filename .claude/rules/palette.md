@@ -11,8 +11,8 @@ globs:
 
 ## ColorExpr Syntax
 
-- Literal hex: `"#3DAEE9"`
-- Reference: `"colors.vortex"`, `"base.background"`, `"ansi.bright.red"`
+- Literal hex: `"#E26A3B"`
+- Reference: `"colors.lantern.mid"`, `"base.background"`, `"ansi.bright.red"`
 - Functions (nestable):
   - `lighten(expr, factor)` — increase lightness proportionally
   - `darken(expr, factor)` — decrease lightness proportionally

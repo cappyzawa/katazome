@@ -24,7 +24,7 @@ Never read `colors`; the context does not carry it.
 
 ## Per-Variant Output
 
-`{theme}` (`theme.id`) and `{variant}` (`variant.id`). `{theme}` is also substituted in a static (non-`.tera`) file's path, e.g. `templates/nvim/lua/{theme}/highlights/editor.lua` → `nvim/lua/ninja/highlights/editor.lua`.
+`{theme}` (`theme.id`) and `{variant}` (`variant.id`). `{theme}` is also substituted in a static (non-`.tera`) file's path, e.g. `templates/nvim/lua/{theme}/highlights/editor.lua` → `nvim/lua/akari/highlights/editor.lua`.
 
 ## Theme-Directory Assets (`THEME_ASSETS`)
 
@@ -35,8 +35,8 @@ Some `THEME_TOOLS` entries ship a file that lives in the theme directory itself 
 
 ## Custom Filters
 
-- `hex_to_rgb` — `"#3DAEE9" | hex_to_rgb` → `"[61, 174, 233]"`
-- `hex_to_rgb_space` — `"#3DAEE9" | hex_to_rgb_space` → `"61 174 233"`
+- `hex_to_rgb` — `"#E26A3B" | hex_to_rgb` → `"[226, 106, 59]"`
+- `hex_to_rgb_space` — `"#E26A3B" | hex_to_rgb_space` → `"226 106 59"`
 
 ## Static Files
 
