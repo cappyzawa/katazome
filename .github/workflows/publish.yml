@@ -24,7 +24,7 @@ jobs:
         echo "tag=v$version" >> "$GITHUB_OUTPUT"
 
     - name: Publish to crates.io
-      run: cargo publish
+      run: cargo publish --locked
       env:
         CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
