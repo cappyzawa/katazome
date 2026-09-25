@@ -37,7 +37,6 @@ Some `THEME_TOOLS` entries ship a file that lives in the theme directory itself 
 
 - `hex_to_rgb` — `"#E26A3B" | hex_to_rgb` → `"[226, 106, 59]"`
 - `hex_to_rgb_space` — `"#E26A3B" | hex_to_rgb_space` → `"226 106 59"`
-- `hex_to_hsl` — `"#FF0000" | hex_to_hsl` → `[0.0, 1.0, 0.5]` (hue, saturation, lightness, each 0–1)
 
 ## Static Files
 
